@@ -16,7 +16,7 @@ const websock = () => {
         console.log("Client connected: " + ws.id);
         //envio mensaje a cliente conectado ws
         if (ws.readyState === webSocket.OPEN) {
-            ws.send(JSON.stringify({ responsews: 'Client connected nro:' + ws.id}));
+            ws.send(JSON.stringify({ responsews: 'Client connected nro:' + ws.id }));
         }
 
         //por cada mensaje de cada cliente
@@ -24,8 +24,6 @@ const websock = () => {
             const enc = new TextDecoder("utf-8");
             const text = enc.decode(new Uint8Array(message).buffer);
             const jsonobj = JSON.parse(text);
-
-            //channel identifica un grupo de clientes el dato viene en el mensaje
             channel = jsonobj.group;
 
             if (!channels[channel]) {
@@ -35,15 +33,15 @@ const websock = () => {
             const exist = channels[channel].find(wso => wso.id === ws.id);
 
             //si el cliente ya existe en el canal no lo agrego
-            //si no existe lo agrego
             if (!exist) {
-                channels[channel].push(ws); //ws es el cliente
+                channels[channel].push(ws); 
             }
 
             const theMessage = { message: message };
             //channels es arrays de clientes
             channels[channel].forEach((client) => { //client es cada ws
-                client.send(JSON.stringify(theMessage));//broadcasting de mensaje
+                console.log('message: ' + message)
+                client.send(message);
             });
         });
 
